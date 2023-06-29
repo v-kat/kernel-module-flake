@@ -53,6 +53,14 @@
 
         mkdir -p $dev/lib/modules/${modDirVersion}/{build,source}
 
+
+        pwd
+        ls -lah $dev/lib/modules/${modDirVersion}/build
+        ls -d $dev/lib/modules/${modDirVersion}/build
+        echo "debugggg--------------------"
+
+        # sudo mkdir -p $dev/lib/modules/${modDirVersion}-development/build
+
         # To save space, exclude a bunch of unneeded stuff when copying.
         (cd .. && rsync --archive --prune-empty-dirs \
             --exclude='/build/' \

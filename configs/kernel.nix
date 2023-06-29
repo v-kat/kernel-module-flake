@@ -6,8 +6,12 @@
   enableGdb,
   useRustForLinux,
 }: let
-  version = "6.1.4";
+  # https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/refs/heads
+  # version = "6.1.4";
+  version = "6.3.8";
+  # version = "6.2.16"; # worked
   localVersion = "-development";
+  # localVersion = ""; # didn't wrk
 in {
   kernelArgs = {
     inherit enableRust enableGdb;
@@ -23,7 +27,9 @@ in {
       else
         pkgs.fetchurl {
           url = "mirror://kernel/linux/kernel/v6.x/linux-${version}.tar.xz";
-          sha256 = "sha256-iqj2T6YLsTOBqWCNH++90FVeKnDECyx9BnGw1kqkVZ4=";
+          # sha256 = "sha256-iqj2T6YLsTOBqWCNH++90FVeKnDECyx9BnGw1kqkVZ4="; # 6.1.4
+          # sha256 = "sha256-Bv8NeAppNLRhQPbYwaFXkseKozfYskEb+QdHNx01hxM="; # 6.2.16
+          sha256 = "sha256-QyPUISUOLkRMNdNvSqjdtWWR3twlxo01nRnE753SCVU="; # 6.3.8
         };
 
     # Add kernel patches here
@@ -54,7 +60,8 @@ in {
         then ".0-rc1"
         else "";
     in
-      version + appendV + localVersion;
+      # version + appendV + localVersion;
+      version;
   };
 
   kernelConfig = {
@@ -79,13 +86,17 @@ in {
 
         SLUB_DEBUG = yes;
         DEBUG_MEMORY_INIT = yes;
-        KASAN = yes;
+        # KASAN = yes; # maybe caused issue during module load on NixOS 23.05
 
+        # trying to add for kernel magic number on my system
+        PREEMPT = yes;
+        SMP = yes;
+        # RETPOLINE = no; # other weird Spectre V2 error that needed to bypass to get module to load on NixOS 23.05
         # FRAME_WARN - warn at build time for stack frames larger tahn this.
 
         MAGIC_SYSRQ = yes;
 
-        LOCALVERSION = freeform localVersion;
+        # LOCALVERSION = freeform localVersion;
 
         LOCK_STAT = yes;
         PROVE_LOCKING = yes;

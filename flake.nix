@@ -16,9 +16,11 @@
 
     # Flake options
     enableBPF = true;
-    enableRust = true;
+    # enableRust = true;
+    enableRust = false; # turned off due to lagging support for 6.3 kernel
     enableEditor = true;
     enableGdb = true;
+    # useRustForLinux = true; # build failed
     useRustForLinux = false;
 
     buildLib = pkgs.callPackage ./build {};
@@ -137,7 +139,7 @@
           rustc
         ]
         ++ lib.optional enableGdb runGdb
-        ++ lib.optional enableEditor neovimPkg
+        # ++ lib.optional enableEditor neovimPkg
         ++ lib.optionals enableRust [cargo rustfmt genRustAnalyzer];
       buildInputs = [pkgs.nukeReferences kernel.dev];
     in
@@ -145,6 +147,7 @@
         inherit buildInputs nativeBuildInputs;
         KERNEL = kernel.dev;
         KERNEL_VERSION = kernel.modDirVersion;
+        # KERNEL_VERSION = "6.3.8";
         RUST_LIB_SRC = pkgs.rustPlatform.rustLibSrc;
       };
   in {

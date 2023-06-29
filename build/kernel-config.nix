@@ -93,7 +93,8 @@ in
         export HOSTLD=$LD_FOR_BUILD
         # Get a basic config file for later refinement with $generateConfig.
         make $makeFlags \
-          -C . O="$buildRoot" allnoconfig \
+          -C . O="$buildRoot" defconfig \
+          CFLAGS="-fsanitize=address" \
           HOSTCC=$HOSTCC HOSTCXX=$HOSTCXX HOSTAR=$HOSTAR HOSTLD=$HOSTLD \
           CC=$CC OBJCOPY=$OBJCOPY OBJDUMP=$OBJDUMP READELF=$READELF \
           $makeFlags
@@ -105,6 +106,7 @@ in
           PREFER_BUILTIN=$preferBuiltin BUILD_ROOT="$buildRoot" SRC=. MAKE_FLAGS="$makeFlags" \
           perl -w $generateConfig
       '';
+          # CFLAGS="-fsanitize=address" \
 
       installPhase = "mv $buildRoot/.config $out";
 

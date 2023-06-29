@@ -2,6 +2,9 @@
 
 //! Rust out-of-tree sample.
 
+// use std::fs::File;
+// use std::io::prelude::*;
+
 use kernel::prelude::*;
 
 module! {
